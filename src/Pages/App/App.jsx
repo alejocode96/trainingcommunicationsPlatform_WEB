@@ -9,10 +9,18 @@ import { TrainingLogiTransProvider } from '../../Context';
 //Pages
 import Home from "../Home";
 
+//Components
+import LayoutWithHeader from "../../Components/Home/header";
+
 //Rutas
 const AppRoutes = () => {
   let routes = useRoutes([
-    { path: '/', element: <Home /> },
+    {
+      element: <LayoutWithHeader />,
+      children: [
+        { path: '/', element: <Home /> }
+      ]
+    },
   ]);
   return routes
 }
