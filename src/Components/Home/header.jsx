@@ -131,8 +131,8 @@ function Header() {
                         <button onClick={toggleTheme} className='w-full flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 rounded-2xl bg-gradient-to-r form-zinc-200 to-zinc-300 dark:from-zinc-800 dark:to-zinc-700 text-zinc-700 dark:text-zinc-300 font-semibold shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] group'>
                             <div className='flex items-center gap-3 min-w-0'>
                                 <div className='relative w-5 h-5 flex-shrink-0'>
-                                    <Sun className='w-5 h-5 absolute transition-all duration-300 rotate-0 scale-100 dark:-rotate-90 dark:scale-0' />
-                                    <Moon className='w-5 h-5 absolute transition-all duration-300 rotate-90 scale-0 dark:-rotate-0 dark:scale-100' />
+                                    <Sun className='w-5 h-5 text-amber-500 absolute transition-all duration-300 rotate-0 scale-100 dark:-rotate-90 dark:scale-0' />
+                                    <Moon className='w-5 h-5 text-blue-400 absolute transition-all duration-300 rotate-90 scale-0 dark:-rotate-0 dark:scale-100' />
                                 </div>
                                 <span className='truncate'>Tema</span>
                             </div>
