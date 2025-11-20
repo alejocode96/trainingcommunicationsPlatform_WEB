@@ -25,27 +25,7 @@ function TrainingLogiTransProvider({ children }) {
                 "A lo largo de la formación, los participantes adquirirán herramientas para identificar, reportar y mitigar operaciones sospechosas, contribuyendo al sistema de control de estos riesgos."
             ]
         },
-        {
-            id: 2,
-            title: "CAPACITACIÓN ANUAL SARLAFT 2025",
-            subtitle: "Prevención y control en empresas de transporte",
-            direcionamiento: "sarlaft", firma: firmaSarlaft, imagePortada: sarlaftCurso,
-            description: [
-                "Este curso tiene como propósito Fortalecer los conocimientos y la cultura de los colaboradores de la empresa de transporte frente a la ** prevención de los riesgos de lavado de activo, financiación del terrorismo y de la proliferación de armas de destrucción masiva.**",
-                "A lo largo de la formación, los participantes adquirirán herramientas para identificar, reportar y mitigar operaciones sospechosas, contribuyendo al sistema de control de estos riesgos."
-            ]
-        },
-
-        {
-            id: 3,
-            title: "CAPACITACIÓN ANUAL SARLAFT 2025",
-            subtitle: "Prevención y control en empresas de transporte",
-            direcionamiento: "sarlaft", firma: firmaSarlaft, imagePortada: sarlaftCurso,
-            description: [
-                "Este curso tiene como propósito Fortalecer los conocimientos y la cultura de los colaboradores de la empresa de transporte frente a la ** prevención de los riesgos de lavado de activo, financiación del terrorismo y de la proliferación de armas de destrucción masiva.**",
-                "A lo largo de la formación, los participantes adquirirán herramientas para identificar, reportar y mitigar operaciones sospechosas, contribuyendo al sistema de control de estos riesgos."
-            ]
-        }
+       
     ]
 
 

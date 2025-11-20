@@ -16,7 +16,7 @@ function TrainingSection() {
     const { defaultTrainings } = React.useContext(TrainingLogiTransContext)
 
     // Calcular cuántas cards mostrar por vista
-    const [cardsPerView, setCardsPerView] = useState(2);
+    const [cardsPerView, setCardsPerView] = useState(1);
 
     //indice del carrusel
     const [currentIndexFormaciones, setCurrentIndexFormaciones] = useState(0);
@@ -44,39 +44,41 @@ function TrainingSection() {
     const isDraggingRefFormaciones = useRef(false);
 
     /**
-     * Efecto encargado de ajustar dinámicamente la cantidad de cards visibles
-     * según el ancho actual de la ventana del navegador.
-     *
-     * Lógica implementada:
-     *  - Ventanas con ancho >= 768px muestran 2 cards.
-     *  - Ventanas con ancho < 768px muestran 1 card.
-     *
-     * Cuando el valor calculado cambia:
-     *  - Se actualiza el estado `cardsPerView`.
-     *  - Se reinicia el índice del carrusel para mantener consistencia visual.
-     *
-     * Este efecto depende de: [cardsPerView]
-     * Solo se vuelve a ejecutar cuando cambia su valor, evitando renders innecesarios.
-     */
+         * Actualiza la cantidad de tarjetas visibles según el ancho de la ventana
+         * y la cantidad total de tarjetas disponibles.
+         *
+         * Reglas:
+         * - Si el ancho de pantalla es >= 768px, mostrar 2 tarjetas por vista
+         *   (desktop), de lo contrario 1 tarjeta (mobile).
+         * - Si `defaultTrainings` tiene solo 1 elemento, forzar `cardsPerView = 1`.
+         */
     useEffect(() => {
-        const updateCardsPerView = () => {
-            const newCardsPerView = window.innerWidth >= 768 ? 2 : 1;
 
+        const updateCardsPerView = () => {
+            let newCardsPerView = window.innerWidth >= 768 ? 2 : 1;
+
+            // Forzar 1 tarjeta si hay menos de 2 elementos
+            if (defaultTrainings.length <= 1) {
+                newCardsPerView = 1;
+            }
+
+            // Actualiza solo si cambió la cantidad de tarjetas visibles
             if (newCardsPerView !== cardsPerView) {
                 setCardsPerView(newCardsPerView);
-                setCurrentIndexFormaciones(0);
+                setCurrentIndexFormaciones(0); // reinicia el carrusel al primer slide
             }
         };
 
-        // Evaluación inicial
+        // Evaluación inicial al montar el componente
         updateCardsPerView();
 
-        // Escucha cambios de tamaño
+        // Escucha cambios de tamaño de ventana
         window.addEventListener("resize", updateCardsPerView);
 
         // Limpieza para evitar memory leaks
         return () => window.removeEventListener("resize", updateCardsPerView);
-    }, [cardsPerView]);
+
+    }, [cardsPerView, defaultTrainings.length]);
 
 
     /**
@@ -568,7 +570,7 @@ function TrainingSection() {
                             <div className='flex transition-transform duration-300 ease-out' style={{ transform: getTransformValueFormaciones() }}>
                                 {defaultTrainings.map((training) => (
                                     <div key={training.id} className={`flex-shrink-0 px-2 mt-4 mb-4 ${cardsPerView === 1 ? 'w-full' : 'w-1/2'}`}>
-                                        <div className='bg-white dark:bg-[#111113] rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer group'>
+                                        <div className='bg-white dark:bg-[#1a1a1c] rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer group'>
                                             <div className='relative overflow-hidden rounded-t-2xl'>
                                                 <img src={training.imagePortada} alt={training.title} className='w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110' draggable="false" />
                                                 <div className='absolute inset-0  bg-gradient-to-t from-black/50 to-transparent opacity-0  group-hover:opacity-100 transition-opacity duration-300'></div>
@@ -581,7 +583,7 @@ function TrainingSection() {
                                                 </div>
                                             </div>
 
-                                            <div className='relative -mt-6 bg-white dark:bg-[#111113] rounded-t-3xl p-5 z-10'>
+                                            <div className='relative -mt-6 bg-white dark:bg-[#1a1a1c] rounded-t-3xl p-5 z-10'>
                                                 <h3 className='text-lg font-semibold text-zinc-800 dark:text-zinc-300'>{training.title}</h3>
                                                 <p className='text-sm text-blue-600 font-medium mb-2'>{training.subtitle}</p>
                                                 {training.description.slice(0, 1).map((paragraph, index) => (
@@ -610,7 +612,7 @@ function TrainingSection() {
                         {defaultTrainings.length > 1 && (
                             <div className="flex md:hidden justify-center gap-2 mt-6">
                                 {defaultTrainings.map((_, index) => (
-                                    <button key={index} onClick={() => setCurrentIndexFormaciones(index)} className={`h-2 rounded-full transition-all duration-300 ${currentIndexFormaciones === index ? 'w-8 bg-blue-600'  : 'w-2 bg-zinc-300'  }`} />
+                                    <button key={index} onClick={() => setCurrentIndexFormaciones(index)} className={`h-2 rounded-full transition-all duration-300 ${currentIndexFormaciones === index ? 'w-8 bg-blue-600' : 'w-2 bg-zinc-300'}`} />
                                 ))}
                             </div>
                         )}
