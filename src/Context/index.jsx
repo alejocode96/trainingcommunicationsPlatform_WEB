@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 
 const TrainingLogiTransContext = React.createContext();
 
-
+//imagenes
+import firmaSarlaft from '../assets/firma_vanesa.png';
+import sarlaftCurso from '../assets/sarlaftCurso.png'
 
 function TrainingLogiTransProvider({ children }) {
 
@@ -11,53 +13,86 @@ function TrainingLogiTransProvider({ children }) {
     //manejo de navar home
     const [sideBarHome, setSideBarHome] = useState(false);
 
+
+    const defaultTrainings = [
+        {
+            id: 1,
+            title: "CAPACITACIÓN ANUAL SARLAFT 2025",
+            subtitle: "Prevención y control en empresas de transporte",
+            direcionamiento: "sarlaft", firma: firmaSarlaft, imagePortada: sarlaftCurso,
+            description: [
+                "Este curso tiene como propósito Fortalecer los conocimientos y la cultura de los colaboradores de la empresa de transporte frente a la ** prevención de los riesgos de lavado de activo, financiación del terrorismo y de la proliferación de armas de destrucción masiva.**",
+                "A lo largo de la formación, los participantes adquirirán herramientas para identificar, reportar y mitigar operaciones sospechosas, contribuyendo al sistema de control de estos riesgos."
+            ]
+        },
+        {
+            id: 2,
+            title: "CAPACITACIÓN ANUAL SARLAFT 2025",
+            subtitle: "Prevención y control en empresas de transporte",
+            direcionamiento: "sarlaft", firma: firmaSarlaft, imagePortada: sarlaftCurso,
+            description: [
+                "Este curso tiene como propósito Fortalecer los conocimientos y la cultura de los colaboradores de la empresa de transporte frente a la ** prevención de los riesgos de lavado de activo, financiación del terrorismo y de la proliferación de armas de destrucción masiva.**",
+                "A lo largo de la formación, los participantes adquirirán herramientas para identificar, reportar y mitigar operaciones sospechosas, contribuyendo al sistema de control de estos riesgos."
+            ]
+        },
+
+        {
+            id: 3,
+            title: "CAPACITACIÓN ANUAL SARLAFT 2025",
+            subtitle: "Prevención y control en empresas de transporte",
+            direcionamiento: "sarlaft", firma: firmaSarlaft, imagePortada: sarlaftCurso,
+            description: [
+                "Este curso tiene como propósito Fortalecer los conocimientos y la cultura de los colaboradores de la empresa de transporte frente a la ** prevención de los riesgos de lavado de activo, financiación del terrorismo y de la proliferación de armas de destrucción masiva.**",
+                "A lo largo de la formación, los participantes adquirirán herramientas para identificar, reportar y mitigar operaciones sospechosas, contribuyendo al sistema de control de estos riesgos."
+            ]
+        }
+    ]
+
+
     /**
-     * Alterna entre los temas "light" y "dark" de la aplicación.
+     * Alterna entre los temas "light" y "dark".
      *
-     * Esta función invierte el valor del estado `theme`, guardando la nueva
-     * preferencia en `localStorage` para que persista entre sesiones. Además,
-     * actualiza dinámicamente la clase `dark` en el elemento raíz (`<html>`),
-     * permitiendo que Tailwind CSS active las variantes de modo oscuro (`dark:`).
+     * - Invierte el valor actual del estado `theme`.
+     * - Persiste la nueva preferencia en localStorage.
+     * - Añade o remueve la clase `dark` en el elemento raíz (<html>) para
+     *   activar las variantes `dark:` de Tailwind CSS.
      *
-     * @function toggleTheme
-     * @description
-     * - Cambia el valor del estado `theme` usando `setTheme`.
-     * - Guarda el tema actualizado en `localStorage`.
-     * - Agrega o elimina la clase `dark` en `document.documentElement`.
-     * - Activa o desactiva las variaciones `dark:` provistas por Tailwind CSS.
-    */
+     * Nota: proteger el acceso a document/localStorage si el componente puede
+     * ejecutarse en un entorno sin DOM (SSR).
+     *
+     * @function
+     */
     const toggleTheme = () => {
         const newTheme = theme === 'light' ? 'dark' : 'light';
         setTheme(newTheme);
 
-        // Guardar preferencia en localStorage
-        localStorage.setItem('theme', newTheme);
+        try {
+            localStorage.setItem('theme', newTheme);
+        } catch (e) {
+            // Manejo suave si localStorage no está disponible
+        }
 
-        //cambiar la clase en el html
-        if (newTheme === 'dark') {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
+        if (typeof document !== 'undefined') {
+            if (newTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
         }
     };
 
     /**
-     * Sincroniza el estado `theme` con la clase `dark` en el elemento raíz (`<html>`).
+     * Sincroniza la clase `dark` en <html> con el estado `theme`.
      *
-     * Este efecto se ejecuta cada vez que cambia `theme`, garantizando que la
-     * clase correspondiente se aplique correctamente incluso si el estado se carga
-     * desde `localStorage` o desde un contexto global.
+     * Comportamiento:
+     * - Si theme === 'dark' añade la clase `dark` al elemento raíz.
+     * - Si theme === 'light' la elimina.
      *
-     * @effect
-     * @description
-     * - Si `theme` es "dark", agrega la clase `dark` al `<html>`.
-     * - Si `theme` es "light", elimina la clase `dark`.
-     * - Tailwind CSS utiliza esta clase para habilitar sus variantes de modo oscuro.
-     *
-     * @dependencies [theme]
-     * Este efecto se ejecuta únicamente cuando cambia el valor de `theme`.
-    */
+     * Dependencias: [theme] — el efecto se ejecuta cada vez que cambia `theme`.
+     */
     useEffect(() => {
+        if (typeof document === 'undefined') return;
+
         if (theme === 'dark') {
             document.documentElement.classList.add('dark');
         } else {
@@ -65,45 +100,34 @@ function TrainingLogiTransProvider({ children }) {
         }
     }, [theme]);
 
+
     /**
-     * Oculta automáticamente el sidebar (`sidebarHome`) cuando la ventana cambia
-     * a un ancho menor que 1024px.
+     * Cierra automáticamente el sidebar cuando el ancho de la ventana es < 1024px.
      *
-     * Este efecto garantiza que si el usuario está en pantalla grande (desktop)
-     * y reduce el tamaño a una vista móvil, el sidebar se cierre automáticamente.
-     * También se ejecuta al montar el componente para cubrir el caso en el que
-     * la página se abra directamente en un dispositivo móvil.
+     * - Ejecuta la comprobación al montar (por si la página se carga en móvil).
+     * - Suscribe un listener a 'resize' para ocultar el sidebar si se redimensiona a < 1024px.
+     * - Limpia el listener al desmontar.
      *
-     * @effect
-     * @description
-     * - Escucha cambios en el tamaño de la ventana (`resize`).
-     * - Si el ancho es menor a 1024px (punto `lg` de Tailwind), cierra `sidebarHome`.
-     * - Limpia el listener cuando el componente se desmonta.
-     *
-     * @dependencies []
-     * Este efecto se ejecuta solo una vez al montar el componente.
-    */
+     * Dependencias: [] — este efecto se ejecuta solo al montar/desmontar.
+     */
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 1024) {
                 setSideBarHome(false);
             }
         };
-        //Ejecutar una vez al montar (por si el usuario abre desde movil)
-        handleResize();
 
-        //Escuhar cambios de tamaño
+        handleResize(); // ejecución inicial
         window.addEventListener('resize', handleResize);
 
-        //limpiar el listener
-        return () => window.removeEventListener('resize', handleResize)
-
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     return (
         <TrainingLogiTransContext.Provider value={{
             theme, setTheme, toggleTheme,
             sideBarHome, setSideBarHome,
+            defaultTrainings
         }}>
             {children}
         </TrainingLogiTransContext.Provider>
