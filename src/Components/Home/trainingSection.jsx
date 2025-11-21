@@ -8,8 +8,7 @@ import { TrainingLogiTransContext } from '../../Context';
 //iconos
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 
-//imagenes
-import formacionesycomunicaciones from '../../assets/formacionesycomunicaciones.png';
+
 
 
 function TrainingSection() {
@@ -98,7 +97,28 @@ function TrainingSection() {
      */
     const maxIndexFormaciones = Math.max(0, defaultTrainings.length - cardsPerView);
 
+    /**
+        * Navega al siguiente slide en el carrusel "Formaciones".
+        *
+        * Lógica:
+        * - Si el índice actual (`currentIndexFormaciones`) es menor
+        *   que el índice máximo (`maxIndexFormaciones`), avanza al siguiente slide.
+        * - Si ya está en el último slide, se reinicia al primero (efecto loop/circular).
+        */
+    const goToNextFormaciones = () => {
+        setCurrentIndexFormaciones((prev) => (prev >= maxIndexFormaciones ? 0 : prev + 1));
+    };
 
+    /**
+     * Navega al slide anterior en el carrusel "Formaciones".
+     *
+     * Lógica:
+     * - Si el índice actual (`currentIndexFormaciones`) es mayor que 0, retrocede un slide.
+     * - Si ya está en el primer slide, se mueve al último (efecto loop/circular).
+     */
+    const goToPrevFormaciones = () => {
+        setCurrentIndexFormaciones((prev) => (prev <= 0 ? maxIndexFormaciones : prev - 1));
+    };
     /**
      * Controlador del evento `mousedown` para iniciar el proceso de arrastre
      * del componente correspondiente a "Formaciones".
@@ -490,28 +510,7 @@ function TrainingSection() {
         return `translateX(calc(-${currentIndexFormaciones * cardWidthPercentage}% + ${translateXFormaciones}px))`;
     };
 
-    /**
-     * Navega al siguiente slide en el carrusel "Formaciones".
-     *
-     * Lógica:
-     * - Si el índice actual (`currentIndexFormaciones`) es menor
-     *   que el índice máximo (`maxIndexFormaciones`), avanza al siguiente slide.
-     * - Si ya está en el último slide, se reinicia al primero (efecto loop/circular).
-     */
-    const goToNextFormaciones = () => {
-        setCurrentIndexFormaciones((prev) => (prev >= maxIndexFormaciones ? 0 : prev + 1));
-    };
 
-    /**
-     * Navega al slide anterior en el carrusel "Formaciones".
-     *
-     * Lógica:
-     * - Si el índice actual (`currentIndexFormaciones`) es mayor que 0, retrocede un slide.
-     * - Si ya está en el primer slide, se mueve al último (efecto loop/circular).
-     */
-    const goToPrevFormaciones = () => {
-        setCurrentIndexFormaciones((prev) => (prev <= 0 ? maxIndexFormaciones : prev - 1));
-    };
 
     return (
         <>
@@ -566,12 +565,12 @@ function TrainingSection() {
                         // onTouchMove	Se usa para mover el carrusel mientras deslizas con el dedo. Se dispara al mover el dedo sobre el div.
                         // onTouchEnd	Se usa para finalizar el swipe. Se dispara al levantar el dedo de la pantalla.
                         // style .. cambia icono del cursor */}
-                        <div ref={carouselRefFormaciones} onMouseDown={handleMouseDownFormaciones} onMouseMove={handleMouseMoveFormaciones} onMouseUp={handleMouseUpFormaciones} onMouseLeave={handleMouseLeaveFormaciones} onTouchStart={handleTouchStartFormaciones} onTouchMove={handleTouchMoveFormaciones} onTouchEnd={handleTouchEndFormaciones} className='relative overflow-hidden cursor-grab active:cursor-grabbing select-none' style={{ cursor: isDraggingFormaciones ? 'grabbing' : 'grab' }}>
+                        <div ref={carouselRefFormaciones} onMouseDown={handleMouseDownFormaciones} onMouseMove={handleMouseMoveFormaciones} onMouseUp={handleMouseUpFormaciones} onMouseLeave={handleMouseLeaveFormaciones} onTouchStart={handleTouchStartFormaciones} onTouchMove={handleTouchMoveFormaciones} onTouchEnd={handleTouchEndFormaciones} className='relative overflow-hidden  cursor-grab active:cursor-grabbing select-none' style={{ cursor: isDraggingFormaciones ? 'grabbing' : 'grab' }}>
                             <div className='flex transition-transform duration-300 ease-out' style={{ transform: getTransformValueFormaciones() }}>
                                 {defaultTrainings.map((training) => (
-                                    <div key={training.id} className={`flex-shrink-0 px-2 mt-4 mb-4 ${cardsPerView === 1 ? 'w-full' : 'w-1/2'}`}>
-                                        <div className='bg-white dark:bg-[#1a1a1c] rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer group'>
-                                            <div className='relative overflow-hidden rounded-t-2xl'>
+                                    <div key={training.id} className={`flex-shrink-0 px-2 py-4 ${cardsPerView === 1 ? 'w-full' : 'w-1/2'}`}>
+                                        <div className='bg-white dark:bg-[#1a1a1c] rounded-2xl shadow-lg  transition-all duration-300  hover:-translate-y-1 cursor-pointer group'>
+                                            <div className='relative overflow-hidden rounded-2xl'>
                                                 <img src={training.imagePortada} alt={training.title} className='w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110' draggable="false" />
                                                 <div className='absolute inset-0  bg-gradient-to-t from-black/50 to-transparent opacity-0  group-hover:opacity-100 transition-opacity duration-300'></div>
                                                 <div className='absolute top-3 left-3 bg-blue-600 rounded-full px-4 py-1.5 shadow-lg'>

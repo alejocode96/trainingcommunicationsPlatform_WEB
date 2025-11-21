@@ -25,9 +25,55 @@ function TrainingLogiTransProvider({ children }) {
                 "A lo largo de la formación, los participantes adquirirán herramientas para identificar, reportar y mitigar operaciones sospechosas, contribuyendo al sistema de control de estos riesgos."
             ]
         },
-       
+         {
+            id: 2,
+            title: "CAPACITACIÓN ANUAL SARLAFT 2025",
+            subtitle: "Prevención y control en empresas de transporte",
+            direcionamiento: "sarlaft", firma: firmaSarlaft, imagePortada: sarlaftCurso,
+            description: [
+                "Este curso tiene como propósito Fortalecer los conocimientos y la cultura de los colaboradores de la empresa de transporte frente a la ** prevención de los riesgos de lavado de activo, financiación del terrorismo y de la proliferación de armas de destrucción masiva.**",
+                "A lo largo de la formación, los participantes adquirirán herramientas para identificar, reportar y mitigar operaciones sospechosas, contribuyendo al sistema de control de estos riesgos."
+            ]
+        },
+         {
+            id: 3,
+            title: "CAPACITACIÓN ANUAL SARLAFT 2025",
+            subtitle: "Prevención y control en empresas de transporte",
+            direcionamiento: "sarlaft", firma: firmaSarlaft, imagePortada: sarlaftCurso,
+            description: [
+                "Este curso tiene como propósito Fortalecer los conocimientos y la cultura de los colaboradores de la empresa de transporte frente a la ** prevención de los riesgos de lavado de activo, financiación del terrorismo y de la proliferación de armas de destrucción masiva.**",
+                "A lo largo de la formación, los participantes adquirirán herramientas para identificar, reportar y mitigar operaciones sospechosas, contribuyendo al sistema de control de estos riesgos."
+            ]
+        },
+
     ]
 
+    const defaultcomunication = [
+        {
+            id: 1,
+            title: "Boletín Informativo Enero",
+            subtitle: "Noticias corporativas",
+            description: ["Mantente al día con las últimas novedades de **Logitrans**. Descubre proyectos, logros y anuncios importantes para toda la organización."],
+            imagePortada: sarlaftCurso,
+            date: "Ene 2025"
+        },
+        {
+            id: 2,
+            title: "Actualización de Políticas",
+            subtitle: "Recursos Humanos",
+            description: ["Conoce las nuevas **políticas de seguridad** y procedimientos actualizados para mejorar nuestro ambiente laboral."],
+            imagePortada: sarlaftCurso,
+            date: "Feb 2025"
+        },
+        {
+            id: 3,
+            title: "Revista Corporativa",
+            subtitle: "Cultura organizacional",
+            description: ["Lee historias inspiradoras de nuestros colaboradores y descubre cómo **juntos construimos** un mejor futuro."],
+            imagePortada: sarlaftCurso,
+            date: "Mar 2025"
+        }
+    ];
 
     /**
      * Alterna entre los temas "light" y "dark".
@@ -107,7 +153,7 @@ function TrainingLogiTransProvider({ children }) {
         <TrainingLogiTransContext.Provider value={{
             theme, setTheme, toggleTheme,
             sideBarHome, setSideBarHome,
-            defaultTrainings
+            defaultTrainings,defaultcomunication
         }}>
             {children}
         </TrainingLogiTransContext.Provider>

@@ -10,7 +10,7 @@ import formacionesycomunicaciones from '../../assets/formacionesycomunicaciones.
 
 //componentes
 import TrainingSection from '../../Components/Home/trainingSection';
-
+import ComunicationSection from '../../Components/Home/comunicationSection';
 function Home() {
 
 
@@ -83,7 +83,10 @@ function Home() {
                 <div className='absolute left-1/2 -translate-x-1/2 w-[110vw] h-[1100px] md:h-[800px] -rotate-2 bg-[#f5f5f5] dark:bg-[#0b0b0d] overflow-hidden z-0 shadow-[0_-15px_50px_rgba(0,0,0,0.1),0_15px_50px_rgba(0,0,0,0.06),inset_0_2px_4px_rgba(255,255,255,0.8),inset_0_-2px_4px_rgba(0,0,0,0.08)] dark:shadow-[0_-20px_60px_rgba(0,0,0,0.4),0_20px_60px_rgba(0,0,0,0.3),inset_0_1px_3px_rgba(255,255,255,0.03),inset_0_-1px_3px_rgba(0,0,0,0.5)]'></div>
 
                 {/* ========== SECCIÓN FORMACIONES ========== */}
-                <TrainingSection/>
+                <TrainingSection />
+
+                {/* ========== SECCIÓN COMUNICACIONES ========== */}
+                <ComunicationSection />
             </div>
         </>
     )
