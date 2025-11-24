@@ -12,7 +12,8 @@ function TrainingLogiTransProvider({ children }) {
     const [theme, setTheme] = useState(() => { return localStorage.getItem('theme') || 'light'; });
     //manejo de navar home
     const [sideBarHome, setSideBarHome] = useState(false);
-
+    //manejo de progreso de entrenamientos
+    const [userProgressTraining, setUserProgressTraining] = useState([]);
 
     const defaultTrainings = [
         {
@@ -25,9 +26,9 @@ function TrainingLogiTransProvider({ children }) {
                 "A lo largo de la formación, los participantes adquirirán herramientas para identificar, reportar y mitigar operaciones sospechosas, contribuyendo al sistema de control de estos riesgos."
             ]
         },
-         {
+        {
             id: 2,
-            title: "CAPACITACIÓN ANUAL SARLAFT 2025",
+            title: "CAPACITACIÓN ANUAL SARLAFT 2026",
             subtitle: "Prevención y control en empresas de transporte",
             direcionamiento: "sarlaft", firma: firmaSarlaft, imagePortada: sarlaftCurso,
             description: [
@@ -35,9 +36,9 @@ function TrainingLogiTransProvider({ children }) {
                 "A lo largo de la formación, los participantes adquirirán herramientas para identificar, reportar y mitigar operaciones sospechosas, contribuyendo al sistema de control de estos riesgos."
             ]
         },
-         {
+        {
             id: 3,
-            title: "CAPACITACIÓN ANUAL SARLAFT 2025",
+            title: "CAPACITACIÓN ANUAL SARLAFT 2028",
             subtitle: "Prevención y control en empresas de transporte",
             direcionamiento: "sarlaft", firma: firmaSarlaft, imagePortada: sarlaftCurso,
             description: [
@@ -45,6 +46,7 @@ function TrainingLogiTransProvider({ children }) {
                 "A lo largo de la formación, los participantes adquirirán herramientas para identificar, reportar y mitigar operaciones sospechosas, contribuyendo al sistema de control de estos riesgos."
             ]
         },
+
 
     ]
 
@@ -74,6 +76,138 @@ function TrainingLogiTransProvider({ children }) {
             date: "Mar 2025"
         }
     ];
+
+
+    /**
+      * Inicializa y sincroniza el progreso de entrenamientos con localStorage.
+      * 
+      * Comportamiento:
+      * - Lee el localStorage 'userProgressTrainingV1'
+      * - Si no existe, crea la estructura inicial con todos los defaultTrainings
+      * - Si existe, valida que todos los entrenamientos estén sincronizados:
+      *   * Agrega nuevos entrenamientos que falten
+      *   * Actualiza títulos si han cambiado
+      * - Actualiza el estado con la información sincronizada
+      * 
+      * Estructura de cada item de progreso:
+      * {
+      *   id: number,
+      *   title: string,
+      *   nombre: string,
+      *   cedula: string,
+      *   cumplimiento: number,
+      *   startedAt: string,
+      *   lastAccessAt: string,
+      *   currentModule: number,
+      *   completeModules: array
+      * }
+      */
+    useEffect(() => {
+        try {
+            const storedProgress = localStorage.getItem('userProgressTrainingV1');
+            let progressData = [];
+
+            if (!storedProgress) {
+                // No existe el localStorage, crear estructura inicial
+                progressData = defaultTrainings.map(training => ({
+                    id: training.id,
+                    title: training.title,
+                    nombre: '',
+                    cedula: '',
+                    cumplimiento: 0,
+                    startedAt: '',
+                    lastAccessAt: '',
+                    currentModule: 0,
+                    completeModules: []
+                }));
+
+                localStorage.setItem('userProgressTrainingV1', JSON.stringify(progressData));
+            } else {
+                // Existe el localStorage, validar y sincronizar
+                progressData = JSON.parse(storedProgress);
+
+                // Crear un mapa de los entrenamientos actuales (defaultTrainings)
+                const defaultTrainingsMap = new Map(
+                    defaultTrainings.map(training => [training.id, training])
+                );
+
+                // Crear un mapa de los entrenamientos existentes para búsqueda rápida
+                const existingProgressMap = new Map(
+                    progressData.map(item => [item.id, item])
+                );
+
+                let needsUpdate = false;
+
+                // 1. Filtrar: eliminar entrenamientos que ya no existen en defaultTrainings
+                const filteredProgress = progressData.filter(item => {
+                    if (!defaultTrainingsMap.has(item.id)) {
+                        needsUpdate = true;
+                        return false; // Eliminar este item
+                    }
+                    return true; // Mantener este item
+                });
+
+                progressData = filteredProgress;
+
+                // Actualizar el mapa después del filtrado
+                const updatedProgressMap = new Map(
+                    progressData.map(item => [item.id, item])
+                );
+
+                // 2. Validar cada defaultTraining: agregar nuevos o actualizar títulos
+                defaultTrainings.forEach(training => {
+                    const existingProgress = updatedProgressMap.get(training.id);
+
+                    if (!existingProgress) {
+                        // No existe, agregarlo
+                        progressData.push({
+                            id: training.id,
+                            title: training.title,
+                            nombre: '',
+                            cedula: '',
+                            cumplimiento: 0,
+                            startedAt: '',
+                            lastAccessAt: '',
+                            currentModule: 0,
+                            completeModules: []
+                        });
+                        needsUpdate = true;
+                    } else if (existingProgress.title !== training.title) {
+                        // El título cambió, actualizarlo
+                        existingProgress.title = training.title;
+                        needsUpdate = true;
+                    }
+                });
+
+                // Si hubo cambios, actualizar el localStorage
+                if (needsUpdate) {
+                    localStorage.setItem('userProgressTrainingV1', JSON.stringify(progressData));
+                }
+            }
+
+            // Actualizar el estado
+            setUserProgressTraining(progressData);
+
+        } catch (e) {
+            console.error('Error al manejar userProgressTrainingV1:', e);
+            // En caso de error, inicializar con estructura vacía
+            const initialData = defaultTrainings.map(training => ({
+                id: training.id,
+                title: training.title,
+                nombre: '',
+                cedula: '',
+                cumplimiento: 0,
+                startedAt: '',
+                lastAccessAt: '',
+                currentModule: 0,
+                completeModules: []
+            }));
+            setUserProgressTraining(initialData);
+        }
+    }, []);
+
+
+
 
     /**
      * Alterna entre los temas "light" y "dark".
@@ -153,7 +287,7 @@ function TrainingLogiTransProvider({ children }) {
         <TrainingLogiTransContext.Provider value={{
             theme, setTheme, toggleTheme,
             sideBarHome, setSideBarHome,
-            defaultTrainings,defaultcomunication
+            defaultTrainings, defaultcomunication
         }}>
             {children}
         </TrainingLogiTransContext.Provider>
