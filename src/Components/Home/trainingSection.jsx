@@ -8,11 +8,13 @@ import { TrainingLogiTransContext } from '../../Context';
 //iconos
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 
+//componentes
+import Modal from './modal';
 
 
 
 function TrainingSection() {
-    const { defaultTrainings, userProgressTraining } = React.useContext(TrainingLogiTransContext)
+    const { defaultTrainings, userProgressTraining, isModalOpen, setIsModalOpen, selectedTraining, setSelectedTraining } = React.useContext(TrainingLogiTransContext)
 
     // Calcular cuántas cards mostrar por vista
     const [cardsPerView, setCardsPerView] = useState(1);
@@ -511,6 +513,51 @@ function TrainingSection() {
     };
 
 
+    /**
+     * Maneja la acción de clic sobre una tarjeta de formación.
+     *
+     * Comportamiento:
+     * - Evita la acción si el usuario está realizando un arrastre en la lista.
+     * - Establece la información de la formación seleccionada con los datos del
+     *   entrenamiento y el progreso del usuario.
+     * - Abre el modal que solicita la validación de identidad antes de continuar.
+     *
+     * @param {Object} training - Datos de configuración de la formación.
+     * @returns {void}
+     */
+    const handleCardClick = (training, progress) => {
+        // Evitar que se abra mientras se está arrastrando
+        if (isDraggingFormaciones) return;
+
+        setSelectedTraining({
+            id: training.id,
+            name: progress.name || '',
+            documentId: progress.documentId || '',
+            completion: progress.completion || 0,
+            title: training.title,
+            subtitle: training.subtitle,
+            description:training.description,
+            icon:training.icon,
+            type: 'training'
+        });
+
+        setIsModalOpen(true);
+    };
+
+    /**
+     * Cierra el modal de formación y restablece el estado de la formación seleccionada.
+     *
+     * Comportamiento:
+     * - Oculta el modal actual.
+     * - Limpia los datos almacenados en selectedTraining.
+     *
+     * @returns {void}
+     */
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setSelectedTraining(null);
+    };
+
 
     return (
         <>
@@ -573,8 +620,8 @@ function TrainingSection() {
                                     // Si no existe el training, no renderizar nada
                                     if (!training) return null;
                                     return (
-                                        <div key={training.id} className={`flex-shrink-0 px-2 py-4 ${cardsPerView === 1 ? 'w-full' : 'w-1/2'}`}>
-                                            <div className='bg-white dark:bg-[#1a1a1c] rounded-2xl shadow-lg  transition-all duration-300  hover:-translate-y-1 cursor-pointer group'>
+                                        <div key={training.id}  className={`flex-shrink-0 px-2 py-4 ${cardsPerView === 1 ? 'w-full' : 'w-1/2'}`}>
+                                            <div className=' rounded-2xl shadow-lg  transition-all duration-300  hover:-translate-y-1 cursor-pointer group'>
                                                 <div className='relative overflow-hidden rounded-2xl'>
                                                     <img src={training.imagePortada} alt={training.title} className='w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110' draggable="false" />
                                                     <div className='absolute inset-0  bg-gradient-to-t from-black/50 to-transparent opacity-0  group-hover:opacity-100 transition-opacity duration-300'></div>
@@ -623,8 +670,8 @@ function TrainingSection() {
 
                                                             {/* Texto del estado */}
                                                             <div className="flex flex-col leading-tight">
-                                                                <span className={`text-xs font-bold ${progress.completion === 100  ? 'text-white'  : 'text-zinc-700 dark:text-zinc-200'  }`}>
-                                                                    {progress.completion <= 0  ? "Sin iniciar"  : progress.completion === 100  ? "Completado" : `${progress.completion}%`}
+                                                                <span className={`text-xs font-bold ${progress.completion === 100 ? 'text-white' : 'text-zinc-700 dark:text-zinc-200'}`}>
+                                                                    {progress.completion <= 0 ? "Sin iniciar" : progress.completion === 100 ? "Completado" : `${progress.completion}%`}
                                                                 </span>
                                                                 {progress.completion > 0 && progress.completion < 100 && (
                                                                     <span className="text-[10px] font-medium text-blue-600 dark:text-blue-400">
@@ -636,7 +683,7 @@ function TrainingSection() {
                                                     </div>
                                                 </div>
 
-                                                <div className='relative -mt-6 bg-white dark:bg-[#1a1a1c] rounded-t-3xl p-5 z-10'>
+                                                <div className='relative -mt-6 bg-white dark:bg-[#1a1a1c] rounded-3xl p-5 z-10'>
                                                     <h3 className='text-lg font-semibold text-zinc-800 dark:text-zinc-300'>{training.title}</h3>
                                                     <p className='text-sm text-blue-600 font-medium mb-2'>{training.subtitle}</p>
                                                     {training.description.slice(0, 1).map((paragraph, index) => (
@@ -646,14 +693,13 @@ function TrainingSection() {
                                                             )}
                                                         </p>
                                                     ))}
-                                                </div>
-
-                                                <div className="px-5 pb-5">
-                                                    <button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full py-3 shadow-lg transition-all duration-200 hover:shadow-xl flex items-center justify-center gap-2 group">
+                                                    <button onClick={() => handleCardClick(training, progress)} className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full py-3 shadow-lg transition-all duration-200 hover:shadow-xl flex items-center justify-center gap-2 group">
                                                         <span className="font-medium">Ver curso</span>
                                                         <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                                                     </button>
                                                 </div>
+
+
 
 
                                             </div>
@@ -662,6 +708,7 @@ function TrainingSection() {
                                 })}
                             </div>
                         </div>
+
                         {/* Indicadores móvil */}
                         {defaultTrainings.length > 1 && (
                             <div className="flex md:hidden justify-center gap-2 mt-6">
@@ -673,6 +720,10 @@ function TrainingSection() {
                     </div>
                 </div>
             </div>
+
+            {/* Modal */}
+            {isModalOpen && <Modal isOpen={isModalOpen} onClose={handleCloseModal} modalData={selectedTraining} />}
+
         </>
     )
 }

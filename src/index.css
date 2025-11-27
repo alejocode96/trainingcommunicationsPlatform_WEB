@@ -5,3 +5,10 @@ body {
   @apply bg-white dark:bg-zinc-950;
   overflow-x: hidden;
 }
+
+/* Quitar flechas internas del input number */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

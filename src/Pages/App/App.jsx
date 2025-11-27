@@ -8,7 +8,7 @@ import { TrainingLogiTransProvider } from '../../Context';
 
 //Pages
 import Home from "../Home";
-
+import Training from "../Training";
 //Components
 import LayoutWithHeader from "../../Components/Home/header";
 
@@ -18,9 +18,11 @@ const AppRoutes = () => {
     {
       element: <LayoutWithHeader />,
       children: [
-        { path: '/', element: <Home /> }
+        { path: '/', element: <Home /> },
+        { path: '/training/:courseId', element: <Training /> },
       ]
     },
+     { path: '/training/:courseId/module/:moduleId', element: <Training /> }
   ]);
   return routes
 }
